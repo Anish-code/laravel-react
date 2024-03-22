@@ -12,10 +12,12 @@ const StateContext = createContext({
 });
 
 export const ContextProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [token, _setToken] = useState(
-        localStorage.getItem("ACCESS_TOKEN") || null
-    );
+    // Add prop types validation
+    const [user, setUser] = useState({
+        name: "Anish",
+    });
+    const [token, _setToken] = useState(null);
+    // localStorage.getItem("ACCESS_TOKEN") || null
     const setToken = (token) => {
         _setToken(token);
         if (token) {

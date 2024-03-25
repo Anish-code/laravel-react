@@ -14,7 +14,7 @@ const StateContext = createContext({
 export const ContextProvider = ({ children }) => {
     // Add prop types validation
     const [user, setUser] = useState({
-        name: "Anish",
+        name: null,
     });
     const [token, _setToken] = useState(null);
     // localStorage.getItem("ACCESS_TOKEN") || null

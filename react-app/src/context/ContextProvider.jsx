@@ -7,8 +7,10 @@ import PropTypes from "prop-types"; // Import PropTypes
 const StateContext = createContext({
     user: null,
     token: null,
+    notification: null,
     setUser: () => {},
     setToken: () => {},
+    setNotification: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
@@ -16,6 +18,14 @@ export const ContextProvider = ({ children }) => {
     const [user, setUser] = useState({
         name: null,
     });
+    const [notification, _setNotification] = useState("");
+
+    const setNotification = (message) => {
+        _setNotification(message);
+        setTimeout(() => {
+            _setNotification("");
+        }, 5000);
+    };
     const [token, _setToken] = useState(null);
     // localStorage.getItem("ACCESS_TOKEN") || null
     const setToken = (token) => {
@@ -34,6 +44,8 @@ export const ContextProvider = ({ children }) => {
                 token,
                 setUser,
                 setToken,
+                notification,
+                setNotification,
             }}
         >
             {children}

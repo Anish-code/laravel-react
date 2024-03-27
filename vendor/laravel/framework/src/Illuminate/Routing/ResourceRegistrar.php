@@ -610,30 +610,26 @@ class ResourceRegistrar
      * @return array
      */
     protected function getResourceAction($resource, $controller, $method, $options)
-    {
-        $name = $this->getResourceRouteName($resource, $method, $options);
+{
+    $name = $this->getResourceRouteName($resource, $method, $options);
 
-        $action = ['as' => $name, 'uses' => $controller.'@'.$method];
-
-        if (isset($options['middleware'])) {
-            $action['middleware'] = $options['middleware'];
-        }
-
-        if (isset($options['excluded_middleware'])) {
-            $action['excluded_middleware'] = $options['excluded_middleware'];
-        }
-
-        if (isset($options['wheres'])) {
-            $action['where'] = $options['wheres'];
-        }
-
-        if (isset($options['missing'])) {
-            $action['missing'] = $options['missing'];
-        }
-
-        return $action;
+    // Ensure $controller is a string
+    if (is_array($controller)) {
+        // Handle the array appropriately, for example, by selecting the first item
+        $controller = reset($controller);
     }
 
+    $action = ['as' => $name, 'uses' => $controller.'@'.$method];
+
+    // Check if middleware is set and assign it to the action array
+    if (isset($options['middleware'])) {
+        $action['middleware'] = $options['middleware'];
+    }
+
+    return $action;
+}
+
+    
     /**
      * Get the name for a given resource.
      *

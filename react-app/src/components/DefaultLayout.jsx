@@ -4,24 +4,26 @@ import { Link, Navigate, Outlet } from "react-router-dom";
 import axiosClient from "../axios-client";
 
 export default function DefaultLayout() {
-    const { user, token, setUser, setToken } = useStateContext();
+    const { user, token, setUser, setToken, notification } = useStateContext();
+
+    // Redirect to login page if token is not present
     if (!token) {
         return <Navigate to="/login" />;
     }
 
-    const onLogout = (ev) => {
+    // Logout function
+    const onLogout = async (ev) => {
         ev.preventDefault();
-        axiosClient
-            .post("/logout")
-            .then(() => {
-                setUser({});
-                setToken(null);
-            })
-            .catch((error) => {
-                console.error("Logout failed:", error);
-            });
+        try {
+            await axiosClient.post("/logout");
+            setUser({});
+            setToken(null);
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
+    // Fetch user data on component mount
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -34,6 +36,7 @@ export default function DefaultLayout() {
 
         fetchUserData();
     }, [setUser]);
+
     return (
         <div id="defaultLayout">
             <aside>
@@ -45,16 +48,26 @@ export default function DefaultLayout() {
                 <header>
                     <div>Header</div>
                     <div>
-                        {user.name}
-                        <a href="#" onClick={onLogout} className="btn-logout">
-                            Logout
-                        </a>
+                        {user && user.name && (
+                            <>
+                                {user.name}
+                                <a
+                                    href="#"
+                                    onClick={onLogout}
+                                    className="btn-logout"
+                                >
+                                    Logout
+                                </a>
+                            </>
+                        )}
                     </div>
                 </header>
                 <main>
                     <Outlet />
                 </main>
             </div>
+
+            {notification && <div className="notification">{notification}</div>}
         </div>
     );
 }
